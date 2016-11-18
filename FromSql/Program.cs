@@ -28,7 +28,7 @@ namespace FromSql
 
                 Console.Write("Digite o termo para buscar: ");
                 var termoBusca = Console.ReadLine();
-                var livros = db.Livros.FromSql("SELECT * FROM dbo.Livros WHERE Titulo LIKE '%' + @p0 + '%'", termoBusca);
+                var livros = db.Livros.FromSql("SELECT * FROM dbo.Livros WHERE Titulo LIKE '%' + @p0 + '%'", termoBusca).Where(x => x.AnoPublicacao == 2013);
                 Console.WriteLine("------------ RESULTADOS ------------");
                 livros.ForEachAsync(x => Console.WriteLine("Título: " + x.Titulo));
                 Console.ReadKey();
