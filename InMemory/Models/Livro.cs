@@ -1,4 +1,4 @@
-﻿namespace InMemory.Models
+namespace InMemory.Models
 {
     public class Livro
     {

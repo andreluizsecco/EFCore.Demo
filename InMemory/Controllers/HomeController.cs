@@ -1,15 +1,17 @@
-﻿using InMemory.DAL;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using InMemory.Models;
+using InMemory.DAL;
 
 namespace InMemory.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index()
+        public IActionResult Index()
         {
             return View(LivroRepository.ListarLivros());
         }

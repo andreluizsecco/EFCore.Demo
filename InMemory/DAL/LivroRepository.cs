@@ -8,14 +8,9 @@ namespace InMemory.DAL
 {
     public static class LivroRepository
     {
-        private static DbContextOptionsBuilder<LivroContext> _configEF;
-        
         static LivroRepository()
         {
-            _configEF = new DbContextOptionsBuilder<LivroContext>();
-            _configEF.UseInMemoryDatabase();
-
-            using (var context = new LivroContext(_configEF.Options))
+            using (var context = new LivroContext())
             {
                 AdicionarLivro(context, "Domain-Driven Design: Tackling Complexity in the Heart of Software", "Eric Evans", 2003);
                 AdicionarLivro(context, "Agile Principles, Patterns, and Practices in C#", "Robert C. Martin", 2006);
@@ -40,7 +35,7 @@ namespace InMemory.DAL
 
         public static List<Livro> ListarLivros()
         {
-            using (var context = new LivroContext(_configEF.Options))
+            using (var context = new LivroContext())
             {
                 return context.Livros.OrderBy(c => c.Titulo).ToList();
             }
