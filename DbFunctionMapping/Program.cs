@@ -14,10 +14,19 @@ namespace DbFunctionMapping
                 db.Database.EnsureDeleted();
                 db.Database.EnsureCreated();
 
+                db.Database.ExecuteSqlCommand(
+                    @"CREATE FUNCTION [dbo].[ExemplaresDisponiveis] (@livroId INT) RETURNS INT 
+                      AS
+                      BEGIN
+                        DECLARE @count AS INT
+                        SET @count = (SELECT QtdExemplares FROM Livros WHERE LivroId = @livroId)-(SELECT COUNT(*) FROM LivroEmprestimo WHERE LivroId = @livroId AND DataDevolucao IS NULL)
+                        RETURN @count
+                      END"
+                );
+
                 db.Livros.Add(
                     new Livro
                     {
-                        Codigo = 1,
                         Titulo = "Domain-Driven Design: Tackling Complexity in the Heart of Software",
                         Autor = "Eric Evans",
                         AnoPublicacao = 2003,
@@ -42,7 +51,6 @@ namespace DbFunctionMapping
                 db.Livros.Add(
                     new Livro 
                     {
-                        Codigo = 2,
                         Titulo = "Agile Principles, Patterns, and Practices in C#",
                         Autor = "Robert C. Martin",
                         AnoPublicacao = 2006,
@@ -73,7 +81,7 @@ namespace DbFunctionMapping
                     select new 
                     {
                         Titulo =  p.Titulo,
-                        ExemplaresDisponiveis = LivrosContext.ExemplaresDisponiveis(p.Codigo)
+                        ExemplaresDisponiveis = LivrosContext.ExemplaresDisponiveis(p.LivroId)
                     };
 
                 query.ToList().ForEach(x => {
@@ -84,7 +92,7 @@ namespace DbFunctionMapping
                 Console.WriteLine("------------ RESULTADOS (Apenas disponíveis) ------------");
                 var query2 =
                     from p in db.Livros
-                    where LivrosContext.ExemplaresDisponiveis(p.Codigo) > 0
+                    where LivrosContext.ExemplaresDisponiveis(p.LivroId) > 0
                     select p;
 
                 query2.ToList().ForEach(x => {
@@ -111,21 +119,16 @@ namespace DbFunctionMapping
                     .WithOne(p => p.Livro);
             }
 
-            [DbFunction(FunctionName = "ExemplaresDisponiveis", Schema = "dbo")]
-            public static int ExemplaresDisponiveis(int codigo)
+            [DbFunction(Schema="dbo", FunctionName="ExemplaresDisponiveis")]
+            public static int ExemplaresDisponiveis(int livroId)
             {
-                using (var db = new LivrosContext())
-                {
-                    var livro = db.Livros.FirstOrDefault(p => p.Codigo == codigo);
-                    return livro.QtdExemplares - livro.Emprestimos.Where(e => e.DataDevolucao == null).Count();
-                }
+                return 0;
             }
         }
 
         public class Livro
         {
             public int LivroId { get; set; }
-            public int Codigo { get; set; }
             public string Titulo { get; set; }
             public string Autor { get; set; }
             public int AnoPublicacao { get; set; }
