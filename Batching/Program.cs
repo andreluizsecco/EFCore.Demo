@@ -10,6 +10,7 @@ namespace Batching
         {
             using (var db = new LivrosContext())
             {
+                db.Database.EnsureDeleted();
                 db.Database.EnsureCreated();
 
                 if (db.Livros.Any())

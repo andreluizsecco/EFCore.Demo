@@ -98,7 +98,6 @@ namespace DbFunctionMapping
                 query2.ToList().ForEach(x => {
                     Console.WriteLine("Título: " + x.Titulo);
                 });
-                Console.ReadKey();
             }
         }
 

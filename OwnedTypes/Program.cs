@@ -20,8 +20,7 @@ namespace OwnedTypes
                         Idade = 26,
                         Contato = new Contato() 
                         {
-                            TelefoneResidencial = new Telefone() { DDD = 49, Numero = 11111111 },
-                            TelefoneCelular = new Telefone() { DDD = 49, Numero = 999999999 }
+                            Telefone = new Telefone() { DDD = 49, Numero = 11111111 }
                         }  
                     });
 
@@ -29,8 +28,7 @@ namespace OwnedTypes
 
                 var pessoa = db.Pessoas.FirstOrDefault();
                 System.Console.WriteLine($"Nome: {pessoa.Nome}");
-                System.Console.WriteLine($"Tel. Residencial: ({pessoa.Contato.TelefoneResidencial.DDD}) {pessoa.Contato.TelefoneResidencial.Numero}");
-                System.Console.WriteLine($"Tel. Celular: ({pessoa.Contato.TelefoneCelular.DDD}) {pessoa.Contato.TelefoneCelular.Numero}");
+                System.Console.WriteLine($"Telefone: ({pessoa.Contato.Telefone.DDD}) {pessoa.Contato.Telefone.Numero}");
             }
         }
 
@@ -48,8 +46,7 @@ namespace OwnedTypes
             {
                 modelBuilder.Entity<Pessoa>().OwnsOne(p => p.Contato, cb =>
                 {
-                    cb.OwnsOne(c => c.TelefoneResidencial);
-                    cb.OwnsOne(c => c.TelefoneCelular);
+                    cb.OwnsOne(c => c.Telefone).ToTable("Telefone");
                 });
             }
         }
@@ -64,8 +61,7 @@ namespace OwnedTypes
 
         public class Contato
         {
-            public Telefone TelefoneResidencial { get; set; }
-            public Telefone TelefoneCelular { get; set; }
+            public Telefone Telefone { get; set; }
         }
 
         public class Telefone

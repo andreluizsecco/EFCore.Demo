@@ -27,7 +27,6 @@ namespace ModelLevelQueryFilters
                 System.Console.WriteLine();
                 Console.WriteLine("------------ RESULTADOS (IGNORANDO QUERY FILTERS) ------------");
                 db.Livros.IgnoreQueryFilters().ToList().ForEach(x => Console.WriteLine("Título: " + x.Titulo));
-                Console.ReadKey();
             }
         }
 

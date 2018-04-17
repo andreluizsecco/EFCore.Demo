@@ -10,6 +10,7 @@ namespace BackingField
         {
             using (var db = new LivrosContext())
             {
+                db.Database.EnsureDeleted();
                 db.Database.EnsureCreated();
 
                 if (db.Livros.Any())
@@ -27,7 +28,6 @@ namespace BackingField
                 Console.WriteLine("------------ RESULTADOS ------------");
                 db.Livros.ForEachAsync(x => Console.WriteLine("Título: " + x.GetTitulo()));
                 Console.WriteLine("Livros encontrados: " + db.Livros.Count(x => EF.Property<string>(x, "Titulo").Contains("Domain")));
-                Console.ReadKey();
             }
         }
 

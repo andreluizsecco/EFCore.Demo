@@ -11,6 +11,7 @@ namespace TableSplitting
         {
             using (var db = new LivrosContext())
             {
+                db.Database.EnsureDeleted();
                 db.Database.EnsureCreated();
                 
                 db.Livros.Add(
@@ -22,6 +23,8 @@ namespace TableSplitting
                     });
 
                 db.SaveChanges();
+
+                var livros = db.Livros.FirstOrDefault();
             }
         }
 
