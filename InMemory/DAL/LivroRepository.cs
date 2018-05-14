@@ -40,5 +40,14 @@ namespace InMemory.DAL
                 return context.Livros.OrderBy(c => c.Titulo).ToList();
             }
         }
+
+        public static void ExcluirPrimeiroLivro()
+        {
+            using (var context = new LivroContext())
+            {
+                context.Livros.Remove(context.Livros.FirstOrDefault());
+                context.SaveChanges();
+            }
+        }
     }
 }

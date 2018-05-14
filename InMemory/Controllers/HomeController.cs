@@ -15,5 +15,11 @@ namespace InMemory.Controllers
         {
             return View(LivroRepository.ListarLivros());
         }
+
+        public IActionResult ExcluirPrimeiroLivro()
+        {
+            LivroRepository.ExcluirPrimeiroLivro();
+            return RedirectToAction("Index");
+        }
     }
 }
