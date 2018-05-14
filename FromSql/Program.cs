@@ -27,11 +27,58 @@ namespace FromSql
 
                 db.SaveChanges();
 
-                Console.Write("Digite o termo para buscar: ");
-                var termoBusca = Console.ReadLine();
-                var livros = db.Livros.FromSql("SELECT * FROM dbo.Livros WHERE Titulo LIKE '%' + @p0 + '%'", termoBusca).Where(x => x.AnoPublicacao == 2013);
+                System.Console.WriteLine("****** CONSULTA COMUM ******");
+                ConsultaComum("Domain");
+
+                System.Console.WriteLine("****** CONSULTA COM LINQ ******");
+                ConsultaComLinq("Domain");
+
+                System.Console.WriteLine("****** CONSULTA COM STRING INTERPOLATION ******");
+                ConsultaComStringInterpolation("2013");
+
+                System.Console.WriteLine("****** CONSULTA COM STRING INTERPOLATION - PROBLEMAS DE SQL INJECTION ******");
+                ConsultaComStringInterpolationSqlInjection("2013; DROP TABLE Livros;");
+            }
+        }
+
+        public static void ConsultaComum(string filtro)
+        {
+            using(var db = new LivrosContext())
+            {
+                var livros = db.Livros.FromSql("SELECT * FROM dbo.Livros WHERE Titulo LIKE '%' + @p0 + '%'", filtro).ToList();
                 Console.WriteLine("------------ RESULTADOS ------------");
-                livros.ForEachAsync(x => Console.WriteLine("Título: " + x.Titulo));
+                livros.ForEach(x => Console.WriteLine("Título: " + x.Titulo));
+            }
+        }
+
+        public static void ConsultaComLinq(string filtro)
+        {
+            using(var db = new LivrosContext())
+            {
+                var livros = db.Livros.FromSql("SELECT * FROM dbo.Livros WHERE Titulo LIKE '%' + @p0 + '%'", filtro).Where(x => x.AnoPublicacao == 2013).ToList();
+                Console.WriteLine("------------ RESULTADOS ------------");
+                livros.ForEach(x => Console.WriteLine("Título: " + x.Titulo));
+            }
+        }
+
+        public static void ConsultaComStringInterpolation(string filtro)
+        {
+            using(var db = new LivrosContext())
+            {
+                var livros = db.Livros.FromSql($"SELECT * FROM dbo.Livros WHERE AnoPublicacao  = {filtro}").ToList();
+                Console.WriteLine("------------ RESULTADOS ------------");
+                livros.ForEach(x => Console.WriteLine("Título: " + x.Titulo));
+            }
+        }
+
+        public static void ConsultaComStringInterpolationSqlInjection(string filtro)
+        {
+            using(var db = new LivrosContext())
+            {
+                var sql = $"SELECT * FROM dbo.Livros WHERE AnoPublicacao = {filtro}";
+                var livros = db.Livros.FromSql(sql).ToList();
+                Console.WriteLine("------------ RESULTADOS ------------");
+                livros.ForEach(x => Console.WriteLine("Título: " + x.Titulo));
             }
         }
 
