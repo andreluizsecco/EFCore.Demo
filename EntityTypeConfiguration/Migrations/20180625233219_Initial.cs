@@ -1,7 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using System;
-using System.Collections.Generic;
 
 namespace EntityTypeConfiguration.Migrations
 {
@@ -13,12 +12,12 @@ namespace EntityTypeConfiguration.Migrations
                 name: "Livro",
                 columns: table => new
                 {
-                    LivroId = table.Column<int>(type: "int", nullable: false)
+                    LivroId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    AnoPublicacao = table.Column<int>(type: "int", nullable: false),
+                    Titulo = table.Column<string>(type: "varchar(200)", nullable: true),
                     Autor = table.Column<string>(type: "varchar(100)", nullable: true),
-                    DataCadastro = table.Column<DateTime>(type: "date", nullable: false),
-                    Titulo = table.Column<string>(type: "varchar(200)", nullable: true)
+                    AnoPublicacao = table.Column<int>(nullable: false),
+                    DataCadastro = table.Column<DateTime>(type: "date", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -29,9 +28,9 @@ namespace EntityTypeConfiguration.Migrations
                 name: "LivroDetalhe",
                 columns: table => new
                 {
-                    LivroId = table.Column<int>(type: "int", nullable: false),
+                    LivroId = table.Column<int>(nullable: false),
                     Editora = table.Column<string>(type: "varchar(100)", nullable: true),
-                    NumeroPaginas = table.Column<int>(type: "smallint", nullable: false)
+                    NumeroPaginas = table.Column<short>(type: "smallint", nullable: false)
                 },
                 constraints: table =>
                 {
