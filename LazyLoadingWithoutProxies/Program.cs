@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using Microsoft.EntityFrameworkCore;
 
-namespace LazyLoading
+namespace LazyLoadingWithoutProxies
 {
-    class Program
+    public class Program
     {
         static void Main(string[] args)
         {
@@ -90,8 +91,7 @@ namespace LazyLoading
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder
-                .UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=EFCore.Demo;Trusted_Connection=True;")
-                .UseLazyLoadingProxies();
+                .UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=EFCore.Demo;Trusted_Connection=True;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -104,12 +104,28 @@ namespace LazyLoading
 
     public class Livro
     {
+        private ICollection<LivroEmprestimo> _emprestimos;
+
+        public Livro() { }
+
+        public Livro(Action<object, string> lazyLoader)
+        {
+            LazyLoader = lazyLoader;
+        }
+        
+        private Action<object, string> LazyLoader { get; set; }
+
         public int LivroId { get; set; }
         public string Titulo { get; set; }
         public string Autor { get; set; }
         public int AnoPublicacao { get; set; }
         public int QtdExemplares { get; set; }
-        public virtual ICollection<LivroEmprestimo> Emprestimos { get; set; }
+
+        public ICollection<LivroEmprestimo> Emprestimos
+        {
+            get => LazyLoader.Load(this, ref _emprestimos);
+            set => _emprestimos = value;
+        }
     }
 
     public class LivroEmprestimo
@@ -120,5 +136,20 @@ namespace LazyLoading
         public DateTime DataLimiteDevolucao { get; set; }
         public DateTime? DataDevolucao { get; set; }
         public virtual Livro Livro { get; set; }
+    }
+
+    public static class Extensions
+    {
+        public static TRelated Load<TRelated>(
+            this Action<object, string> loader,
+            object entity,
+            ref TRelated navigationField,
+            [CallerMemberName] string navigationName = null)
+            where TRelated : class
+        {
+            loader?.Invoke(entity, navigationName);
+
+            return navigationField;
+        }
     }
 }
