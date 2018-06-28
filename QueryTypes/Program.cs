@@ -30,11 +30,24 @@ namespace QueryTypes
 
                 db.SaveChanges();
 
-                Console.WriteLine("------------ RESULTADOS ------------");
+                Console.WriteLine("------------ RESULTADOS - VIEW ------------");
                 
-                var livrosporAutor = db.LivrosPorAutores.ToList();
+                var livrosPorAutor = db.LivrosPorAutores.ToList();
                 
-                livrosporAutor.ToList().ForEach(x =>
+                livrosPorAutor.ToList().ForEach(x =>
+                {
+                    Console.WriteLine($"Autor: {x.Autor}");
+                    Console.WriteLine($"Quantidade de Livros: {x.QtdLivros}\r\n");
+                });
+
+                Console.WriteLine("------------ RESULTADOS - RAW SQL QUERIES ------------");
+
+                var livrosPorAutorRawSql = db.LivrosPorAutores
+                    .FromSql(@"SELECT Autor, COUNT(LivroId) AS QtdLivros 
+                               FROM dbo.Livros
+                               GROUP BY Autor");
+
+                livrosPorAutor.ToList().ForEach(x =>
                 {
                     Console.WriteLine($"Autor: {x.Autor}");
                     Console.WriteLine($"Quantidade de Livros: {x.QtdLivros}\r\n");
