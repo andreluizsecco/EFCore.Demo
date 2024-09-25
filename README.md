@@ -23,4 +23,6 @@
 #### [Shadow Properties](https://github.com/andreluizsecco/EFCore.Demo/tree/master/ShadowProperties) (Version 1.0) | [Documentation](https://docs.microsoft.com/en-us/ef/core/modeling/shadow-properties) | [Video (pt-br)](https://www.youtube.com/watch?v=nouLNmJWLfA)
 #### [Table Splitting](https://github.com/andreluizsecco/EFCore.Demo/tree/master/TableSplitting) (Version 2.0) | [Documentation](https://docs.microsoft.com/en-us/ef/core/what-is-new/ef-core-2.0#table-splitting) | [Video (pt-br)](https://www.youtube.com/watch?v=laQDOpV7mAc)
 #### [Value Conversions](https://github.com/andreluizsecco/EFCore.Demo/tree/master/ValueConversions) (Version 2.1) | [Documentation](https://docs.microsoft.com/en-us/ef/core/modeling/value-conversions) | [Video (pt-br)](https://www.youtube.com/watch?v=hJP_OpCmCXM)
+#### [Hierarchical Data/HierarchyId](https://github.com/andreluizsecco/EFCore.Demo/tree/master/HierarchyId) (Version 8.0) | [Documentation](https://learn.microsoft.com/en-us/ef/core/providers/sql-server/hierarchyid)
+
 
