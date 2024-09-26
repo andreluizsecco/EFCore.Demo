@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 
 using (var db = new EmpresaContext())
 {
@@ -37,7 +38,7 @@ using (var db = new EmpresaContext())
 
     #region CONSULTANDO HIERARQUIAS
     
-    var nomeDoEmpregado = "Paulo";
+    var nomeDoEmpregado = "Pedro";
 
     var hierarquiaDoEmpregado = db.Empregados
         .Single(empregado => empregado.Nome == nomeDoEmpregado).Hierarquia;
@@ -75,7 +76,7 @@ using (var db = new EmpresaContext())
     // Obter os subordinados diretos de um chefe
     var subordinadosDiretos = await db.Empregados
             .Where(empregado => empregado.Hierarquia.GetAncestor(1) == db.Empregados
-                .Single(empregado => empregado.Nome == nomeDoEmpregado).Hierarquia)
+                .Single(chefe => chefe.Nome == nomeDoEmpregado).Hierarquia)
             .ToListAsync();
 
     Console.WriteLine($"Os subordinados diretos do chefe {nomeDoEmpregado} são: {string.Join(", ", subordinadosDiretos.Select(e => e.Nome))}");
@@ -118,6 +119,8 @@ using (var db = new EmpresaContext())
 
     foreach (var empregado in empregadoESubordinados)
         empregado.Hierarquia = empregado.Hierarquia.GetReparentedValue(chefeAtual?.Hierarquia, novoChefe.Hierarquia)!;
+
+    await db.SaveChangesAsync();
 
     var subordinadosDiretosAtuaisDoNovoChefe = await db.Empregados
         .Where(empregado => empregado.Hierarquia.GetAncestor(1) == novoChefe.Hierarquia)
